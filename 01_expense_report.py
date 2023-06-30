@@ -12,5 +12,13 @@ with open("01_expense_report_input.txt") as input:
     
 expenses = [int(entry.strip("/n")) for entry in input_data]
 
-print(expenses)
+# find complementaries to 2020
 
+result = 0
+
+for entry in expenses:
+    complementary = 2020-entry
+    if complementary in expenses:
+        result = entry * complementary
+
+print("\nThe result is:", result)
