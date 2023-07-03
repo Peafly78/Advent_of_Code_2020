@@ -38,3 +38,23 @@ for entry in instr_pws:
 print("\nThe total number of valid passwords is:", valid_count)
 
 
+
+#****************** Part 2 *****
+
+
+# count how many passwords are valid according to new rules
+
+valid_count_new = 0
+
+for entry in instr_pws:
+    valid = False
+    if entry.pw[entry.min-1] == entry.char:
+        if entry.pw[entry.max-1] != entry.char:
+            valid = True
+    elif entry.pw[entry.max-1] == entry.char:
+        valid = True
+    if valid:
+        valid_count_new += 1
+
+
+print("\nThe total number of valid passwords according to the new rules is:", valid_count_new)
