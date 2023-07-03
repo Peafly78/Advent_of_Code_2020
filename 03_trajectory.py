@@ -29,7 +29,7 @@ print("\nNumber of trees encountered on trajectory:", trees_encountered)
 
 
 
-#****************** Part 1 *****
+#****************** Part 2 *****
 
 
 #create function to calculate trees encountered
