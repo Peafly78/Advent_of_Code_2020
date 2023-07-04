@@ -36,3 +36,30 @@ deciphered_seat_ids = [seat_ids[deciphered_seat_positions[i][0]][deciphered_seat
 print("\nThe highest seat ID is:", max(deciphered_seat_ids))
 
 
+#****************** Part 2 *****
+
+
+# find missing seat
+
+occupied_seats = [["X" if seat_id in deciphered_seat_ids else seat_id for seat_id in row] for row in seat_ids]
+
+start_idx = None
+flag = False
+
+for i in range(len(occupied_seats)):
+    if flag:
+        break
+    for j in range(len(occupied_seats[0])):
+        if occupied_seats[i][j] == "X":
+            start_idx = i
+            flag = True
+            break
+
+your_seat = None
+for i in range(start_idx, len(occupied_seats)):
+    for j in range(len(occupied_seats[0])):
+        if occupied_seats[i][j] != "X":
+            if occupied_seats[i-1][j] == "X" and occupied_seats[i+1][j] == "X":
+                your_seat = occupied_seats[i][j]
+
+print("\nYour seat ID is:", your_seat)
