@@ -21,14 +21,14 @@ for i in range(len(input_data)):
 
 print("\nThe number of valid passports is:", valid.count(True))
 
-
+cleaned_data = [input_data[i] for i in range(len(input_data)) if valid[i]]
 
 #****************** Part 2 *****
 
 
 # import data into dictionary
 
-passport_list = [line.split() for line in input_data]
+passport_list = [line.split() for line in cleaned_data]
 
 passport_dicts = list()
 
@@ -38,58 +38,66 @@ for pp in passport_list:
         temp_dict[entry[:3]] = entry[4:]
     passport_dicts.append(temp_dict)
 
-dicts_to_be_removed = list()
-
-for i in range(len(passport_dicts)):
-    for item in ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]:
-        if item not in passport_dicts[i]:
-            dicts_to_be_removed.append(passport_dicts[i])
-
-for dict in dicts_to_be_removed:
-    passport_dicts.remove(dict)
+for dict in passport_dicts:
+    print(dict)
 
 # convert and check values --- check, doesn't work yet
 
-valid_dicts = list()
-
 for dict in passport_dicts:
+    dict["valid"] = True
     for key, value in dict.items():
         if key == "byr":
             value = int(value)
             if value < 1920 or value > 2002:
+                dict["valid"] = False
                 break
         elif key == "iyr":
             value = int(value)
             if value < 2010 or value > 2020:
+                dict["valid"] = False
                 break
         elif key == "eyr":
             value = int(value)
             if value < 2020 or value > 2030:
+                dict["valid"] = False
                 break
-        elif key == "hgt":
-            height = int(value[:-2])
-            if value[-2:] == "cm":
-                if height < 150 or height > 193:
-                    break
-            elif value[-2:] == "in":
-                if height < 59 or height > 76:
-                    break
-        elif key == "hcl":
-            if not value.startswith("#") or len(value) != 7:
-                break
-            for char in value:
-                if char not in "0123456789abcdefgf":
-                    break
         elif key == "ecl":
             if value not in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]:
+                dict["valid"] = False
                 break
         elif key == "pid":
             if len(value) != 9:
+                dict["valid"] = False
                 break
             for char in value:
                 if char not in "0123456789":
+                    dict["valid"] = False
                     break
-        valid_dicts.append(dict)
-        
-for dict in valid_dicts:
-    print(dict)
+        elif key == "hcl":
+            if not value.startswith("#") or len(value) != 7:
+                dict["valid"] = False
+                break
+            for char in value:
+                if char not in "#0123456789abcdefgf":
+                    dict["valid"] = False
+                    break
+        elif key == "hgt":
+            if len(value) < 4:
+                dict["valid"] = False
+                break
+            else:
+                height = int(value[:-2])
+                if value[-2:] == "cm":
+                    if height < 150 or height > 193:
+                        dict["valid"] = False
+                        break
+                elif value[-2:] == "in":
+                    if height < 59 or height > 76:
+                        dict["valid"] = False
+                        break
+        else:
+            continue
+
+valid_dicts = [dict for dict in passport_dicts if dict["valid"]]
+
+print("\nThe number of valid passports after validation is:", len(valid_dicts))
