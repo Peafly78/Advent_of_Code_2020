@@ -31,38 +31,96 @@ print(f"\nThere are {len(set(already_checked))-1} options to carry a shiny gold 
 
 #****************** Part 2 *****
 
+part_2_description = """
+
+--- Part Two ---
+
+It's getting pretty expensive to fly these days - not because of ticket prices, but because of the ridiculous number of bags you need to buy!
+
+Consider again your shiny gold bag and the rules from the above example:
+
+    faded blue bags contain 0 other bags.
+    dotted black bags contain 0 other bags.
+    vibrant plum bags contain 11 other bags: 5 faded blue bags and 6 dotted black bags.
+    dark olive bags contain 7 other bags: 3 faded blue bags and 4 dotted black bags.
+
+So, a single shiny gold bag must contain 1 dark olive bag (and the 7 bags within it) plus 2 vibrant plum bags (and the 11 bags within each of those): 1 + 1*7 + 2 + 2*11 = 32 bags!
+
+Of course, the actual rules have a small chance of going several levels deeper than this example; be sure to count all of the bags, even if the nesting becomes topologically impractical!
+
+Here's another example:
+
+shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.
+
+In this example, a single shiny gold bag must contain 126 other bags.
+
+How many individual bags are required inside your single shiny gold bag?
+
+"""
 
 # find out number of bags to buy
 
-print()
-print(rules_dict)
-
 counting_dict = {key : value.split(", ") for key, value in rules_dict.items()}
 
-print()
-print(counting_dict)
-print()
+# create bag class
 
-# stuck here, finish later
+class Bag:
+    def __init__(self, name):
+        self.name = name
+        self.content = list()
+    
+    def __repr__(self):
+        return self.name
+    
+    def add_bag(self, bag, amount):
+        self.content.append((bag, amount))
+    
+# create bags
 
-total_bags_needed = 0
-check_list_2 = [(1,"shiny gold")]
-temp_dict = dict()
+dict_of_bags = dict()
 
-while check_list_2:
-    key_to_be_checked = check_list_2.pop(0)
-    for entry in counting_dict[key_to_be_checked]:
-        temp_list = entry.split()
-        if temp_list[0] == "no":
-            continue
-        multiplier = int(temp_list[0])
-        # bags_needed = int(temp_list[0])
-        next_color = " ".join(temp_list[1:3])
-        # total_bags_needed += bags_needed
-        check_list_2.append(next_color)
-        print(check_list_2)
-        print(total_bags_needed)
-        
-        
+for key in counting_dict.keys():
+    new_bag = Bag(key)
+    dict_of_bags[new_bag.name] = new_bag
 
+# fill bags 
+ 
+for key, value in dict_of_bags.items():
+    bags_contained = [entry.split() for entry in counting_dict[key]]
+    for bag in bags_contained:
+        if bag[0] == "no":
+            break
+        amount = int(bag[0])
+        bag_name = " ".join(bag[1:3])
+        value.add_bag(dict_of_bags[bag_name], amount)
 
+# count bags that must be in shiny gold bag 
+# -- correct value when count is printed, wrong value when count is returned -- WHY?
+
+def count_contents(bag_list, count=0):
+    print("Start")
+    print("Count:", count)
+    if len(bag_list) == 0:
+        count -= 1
+        print("Final count:", count)
+        return count
+    current_item = bag_list.pop(0)
+    current_bag = current_item[0]
+    current_multiplier = current_item[1]
+    print(current_bag, current_bag.content)
+    count += current_multiplier
+    if len(current_bag.content) > 0:
+        for item in current_bag.content:
+            bag_list.append((item[0], item[1] * current_multiplier))
+    print("Bag list:", bag_list)
+    return count + count_contents(bag_list, count)
+
+shiny_gold_must_contain = count_contents([(dict_of_bags["shiny gold"], 1)])
+
+print(f"\nA single shiny gold bag must contain a total of {shiny_gold_must_contain} other bags.")
