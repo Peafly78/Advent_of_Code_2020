@@ -10,10 +10,6 @@ input_data = None
 with open("08_handheld_input.txt") as input:
     input_data = [input.strip().split() for input in input.readlines()]
 
-# process instructions
-
-
-
 # change to function so it is reusable -- continue here
 
 def process_instructions(list_of_instructions):
