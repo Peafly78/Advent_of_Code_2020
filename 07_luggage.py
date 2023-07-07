@@ -126,14 +126,14 @@ print(f"\nA single shiny gold bag must contain a total of {shiny_gold_must_conta
 # do it with a while loop
 
 queue = [(dict_of_bags['shiny gold'], 1)]
-bag_count = -1
+bag_count = 0
 
 while len(queue) > 0:
     current_item = queue.pop(0)
     current_bag = current_item[0]
     current_multiplier = current_item[1]
-    bag_count += current_multiplier
     for item in current_bag.content:
+        bag_count += item[1] * current_multiplier
         queue.append((item[0], item[1] * current_multiplier))
 
 print(f"\nUsing a while loop the result is:", bag_count)
