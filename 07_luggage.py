@@ -100,28 +100,40 @@ for key, value in dict_of_bags.items():
         bag_name = " ".join(bag[1:3])
         value.add_bag(dict_of_bags[bag_name], amount)
 
+for key, value in dict_of_bags.items():
+    print(key, "-->", value.content)
+
+
 # count bags that must be in shiny gold bag 
-# -- correct value when count is printed, wrong value when count is returned -- WHY?
 
 def count_contents(bag_list):
-    print("Start")
     count = 0
     if len(bag_list) == 0:
         count -= 1
-        print("Final count:", count)
         return count
     current_item = bag_list.pop(0)
     current_bag = current_item[0]
     current_multiplier = current_item[1]
-    print(current_bag, current_bag.content)
     count += current_multiplier
     for item in current_bag.content:
         bag_list.append((item[0], item[1] * current_multiplier))
-    print("Bag list:", bag_list)
     return count + count_contents(bag_list)
 
 shiny_gold_must_contain = count_contents([(dict_of_bags["shiny gold"], 1)])
 
 print(f"\nA single shiny gold bag must contain a total of {shiny_gold_must_contain} other bags.")
 
+# do it with a while loop
 
+queue = [(dict_of_bags['shiny gold'], 1)]
+bag_count = -1
+
+while len(queue) > 0:
+    current_item = queue.pop(0)
+    current_bag = current_item[0]
+    current_multiplier = current_item[1]
+    bag_count += current_multiplier
+    for item in current_bag.content:
+        queue.append((item[0], item[1] * current_multiplier))
+
+print(f"\nUsing a while loop the result is:", bag_count)
