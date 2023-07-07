@@ -12,36 +12,45 @@ with open("08_handheld_input.txt") as input:
 
 # process instructions
 
-accumulator = 0
-idx = 0
-indices_visited = []
 
-while idx < len(input_data):
-    if idx in indices_visited:
-        break
-    indices_visited.append(idx)
 
-    command = input_data[idx][0]
-    move = input_data[idx][1]
+# change to function so it is reusable -- continue here
 
-    if command == "nop":
+def process_instructions(list_of_instructions):
+    accumulator = 0
+    idx = 0
+    indices_visited = []
+    while idx < len(list_of_instructions):
+        if idx in indices_visited:
+            break
+        indices_visited.append(idx)
+
+        command = list_of_instructions[idx][0]
+        move = list_of_instructions[idx][1]
+
+        if command == "nop":
+            idx += 1
+            continue
+
+        elif command == "acc":
+            if move[0] == "+":
+                accumulator += int(move[1:])
+            elif move[0] == "-":
+                accumulator -= int(move[1:])
+
+        elif command == "jmp":
+            if move[0] == "+":
+                idx += int(move[1:])
+                continue
+            elif move[0] == "-":
+                idx -= int(move[1:])
+                continue
+        
         idx += 1
-        continue
 
-    elif command == "acc":
-        if move[0] == "+":
-            accumulator += int(move[1:])
-        elif move[0] == "-":
-            accumulator -= int(move[1:])
+    return accumulator
 
-    elif command == "jmp":
-        if move[0] == "+":
-            idx += int(move[1:])
-            continue
-        elif move[0] == "-":
-            idx -= int(move[1:])
-            continue
-    
-    idx += 1
+print("\nThe value of the accumulator before entering an infinite loop is:", process_instructions(input_data))
 
-print("\nThe value of the accumulator before entering an infinite loop is:", accumulator)
+
+
