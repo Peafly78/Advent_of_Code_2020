@@ -8,7 +8,7 @@
 input_data = None
 
 with open("08_handheld_input.txt") as input:
-    input_data = [tuple(input.strip().split()) for input in input.readlines()]
+    input_data = [input.strip().split() for input in input.readlines()]
 
 # process instructions
 
@@ -48,9 +48,29 @@ def process_instructions(list_of_instructions):
         
         idx += 1
 
-    return accumulator
+    return accumulator, idx
 
-print("\nThe value of the accumulator before entering an infinite loop is:", process_instructions(input_data))
+print("\nThe value of the accumulator before entering an infinite loop is:", process_instructions(input_data)[0])
 
+
+
+#****************** Part 2 *****
+
+
+# fix input data
+
+for line in input_data:
+    if line[0] == "nop":
+        line[0] = "jmp"
+        if process_instructions(input_data)[1] == len(input_data):
+            break
+        line[0] = "nop"
+    elif line[0] == "jmp":
+        line[0] = "nop"
+        if process_instructions(input_data)[1] == len(input_data):
+            break
+        line[0] = "jmp"
+
+print("\nThe value of the accumulator after termination of the program is:", process_instructions(input_data)[0])
 
 
