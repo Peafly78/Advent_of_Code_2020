@@ -12,6 +12,8 @@ with open("09_encoding_input.txt") as input:
 
 # find entry violating rules                 
 
+violating_idx = None
+
 for i in range(25, len(input_data)):
     preamble = input_data[i-25:i]
     match_found = False
@@ -21,5 +23,29 @@ for i in range(25, len(input_data)):
             match_found = True
             break
     if not match_found:
-        print(f"\nThe violating value is:", input_data[i])
+        violating_idx = i
         break
+
+print(f"\nThe violating value is:", input_data[violating_idx])
+
+
+
+#****************** Part 2 *****
+
+
+# find encryption weakness
+
+encryption_weakness = None
+contiguous_set = list()
+
+for num in input_data[:violating_idx]:
+    while sum(contiguous_set) > input_data[violating_idx]:
+        contiguous_set.pop(0)
+
+    if sum(contiguous_set) == input_data[violating_idx]:
+        encryption_weakness = min(contiguous_set) + max(contiguous_set)
+        break
+      
+    contiguous_set.append(num)
+    
+print("\nFound encryption weakness:", encryption_weakness)
