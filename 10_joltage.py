@@ -67,18 +67,30 @@ class Graph:
             self.graph_dict[to_vertex.value].add_edge(from_vertex.value, weight)
 
     def count_paths(self): # find way to count cluster and reduce each cluster by 1
-        path_count = 1
         multi_vals = list()
+        multiplier_list = list()
+        multiplier = 0
         for vertex in self.graph_dict.values():
-            if len(vertex.edges) > 1:
-                multi_vals.append(len(vertex.edges))
+            multi_vals.append(len(vertex.edges))
         print(multi_vals)
-        for i in range(len(multi_vals)):
-            if multi_vals[i] > 1:
-                multi_vals[i] -= 1
-                break
-        print(multi_vals)
-        return reduce(lambda x, y: x*y, multi_vals)
+        idx = 0
+        while idx < len(multi_vals)-1:
+            print(idx)
+            if multi_vals[idx] > 1:
+                multiplier += multi_vals[idx]
+                idx += 1
+                for j in range(idx, len(multi_vals)):
+                    if multi_vals[j] <= 1:
+                        multiplier_list.append(multiplier)
+                        multiplier = 0
+                        break
+                    multiplier += multi_vals[j]
+                    idx += 1
+            idx += 1
+        print(multiplier_list)
+        multiplier_list = [x-1 if x > 2 else x for x in multiplier_list]
+        print(multiplier_list)
+        return reduce(lambda x, y: x*y, multiplier_list)
 
 
     def count_all_paths(self, start_vertex, target_vertex): # in progress -- continue here
