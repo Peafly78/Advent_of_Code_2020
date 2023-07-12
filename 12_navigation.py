@@ -25,19 +25,24 @@ class Ship:
         return self.pos
     
     def change_dir(self, dir):
-        self.dir = dir     
+        self.dir = dir
+
+    def change_pos(self, pos):
+        self.pos = pos     
     
-    def move(self, steps, dir=None):
+    def move(self, steps, dir=None, start=None):
         if not dir:
             dir = self.dir
+        if not start:
+            start = self.pos
         if dir == "E":
-            self.pos[1] += steps
+            start[1] += steps
         elif dir == "W":
-            self.pos[1] -= steps
+            start[1] -= steps
         elif dir == "S":
-            self.pos[0] += steps
+            start[0] += steps
         elif dir == "N":
-            self.pos[0] -= steps
+            start[0] -= steps
     
     def get_distance(self):
         return abs(self.pos[0] + self.pos[1])
@@ -72,7 +77,7 @@ def process_instruction(ship, instruction):
     else:
         print("invalid instruction")
 
-# Testing
+# calculate Manhattan Distance between current position and start position
 
 test_ship = Ship()
 
@@ -81,3 +86,41 @@ for item in input_data:
 
 print("\nThe Manhattan Distance between the ship's current location and the starting location is:", test_ship.get_distance())
 print()
+
+#****************** Part 2 *****
+
+
+
+# create function to rotate waypoint
+
+def bind_wp_to_ship(ship, wp, dir, distance): # continue here -- doesn't work yet
+    wp.move(distance[0], dir[0], ship.pos)
+    wp.move(distance[0], dir[1])
+
+def rotate_waypoint(ship, wp, leftright, deg, distance):
+    dir_0 = None
+    dir_1 = None
+    if ship.pos[0] < wp.pos[0]:
+        dir_0 = "S"
+    else:
+        dir_0 = "N"
+    if ship.pos[1] < wp.pos[1]:
+        dir_1 = "E"
+    else:
+        dir_1 = "W"
+    
+
+# Testing
+
+flag_ship = Ship([170, -38])
+waypoint = Ship()
+
+print(flag_ship.get_pos())
+print(waypoint.get_pos())
+
+bind_wp_to_ship(flag_ship, waypoint, ["N", "E"], [1, 10])
+
+print(flag_ship.get_pos())
+print(waypoint.get_pos())
+
+#rotate_waypoint(flag_ship, waypoint, "R", 90)
