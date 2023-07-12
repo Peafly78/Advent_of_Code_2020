@@ -142,3 +142,104 @@ while change_seats(seating_matrix):
     continue
 
 print("\nThe count of occupied seats is:", count_occupied_seats(seating_matrix))
+
+
+
+
+#****************** Part 2 *****
+
+
+
+# create function to look around in matrix --- fix all of them (counting in distance plus breaking when seat not occupied)
+
+def look_up_and_down(matrix, pos):
+    visible_occupied_seats = 0
+    row = pos[0]
+    col = pos[1]
+    for i in range(1, row):
+        next_cell = matrix[row-i][col]
+        if next_cell == 0:
+            continue
+        if next_cell.is_occupied():
+            visible_occupied_seats += 1
+            break
+    for i in range(1, len(matrix)-row):
+        next_cell = matrix[row+i][col]
+        if next_cell == 0:
+            continue
+        if next_cell.is_occupied():
+            visible_occupied_seats += 1
+            break
+    return visible_occupied_seats
+
+def look_left_and_right(matrix, pos):
+    visible_occupied_seats = 0
+    row = pos[0]
+    col = pos[1]
+    for i in range(1, col):
+        next_cell = matrix[row][col-i]
+        print((row, col-i), next_cell)
+        if next_cell == 0:
+            print("floor")
+            continue
+        if next_cell.is_occupied():
+            print("found occupied seat")
+            visible_occupied_seats += 1
+            break
+    for i in range(1, len(matrix[0])-col):
+        next_cell = matrix[row][col+i]
+        print(next_cell)
+        if next_cell == 0:
+            print("floor")
+            continue
+        if next_cell.is_occupied():
+            print("found occupied seat")
+            visible_occupied_seats += 1
+            break
+    return visible_occupied_seats
+
+def look_diagonal(matrix, pos):
+    visible_occupied_seats = 0
+    row = pos[0]
+    col = pos[1]
+    for i in range(1, min(row, col)):
+        next_cell = matrix[row-i][col-i]
+        if next_cell == 0:
+            continue
+        if next_cell.is_occupied():
+            visible_occupied_seats += 1
+            break
+    for i in range(1, min(row, len(matrix[0])-col)):
+        next_cell = matrix[row-i][col+i]
+        if next_cell == 0:
+            continue
+        if next_cell.is_occupied():
+            visible_occupied_seats += 1
+            break
+    for i in range(1, min(len(matrix)-row, col)):
+        next_cell = matrix[row+i][col-i]
+        if next_cell == 0:
+            continue
+        if next_cell.is_occupied():
+            visible_occupied_seats += 1
+            break
+    for i in range(1, min(len(matrix)-row, len(matrix[0])-col)):
+        next_cell = matrix[row+i][col+i]
+        if next_cell == 0:
+            continue
+        if next_cell.is_occupied():
+            visible_occupied_seats += 1
+            break
+    return visible_occupied_seats
+
+# Testing
+
+position = (1, 1)
+
+print_matrix(seating_matrix)
+print()
+print("Up and down:", look_up_and_down(seating_matrix, position))
+print()
+print("Left and right:", look_left_and_right(seating_matrix, position))
+print()
+print("Diagonal:", look_diagonal(seating_matrix, position))
