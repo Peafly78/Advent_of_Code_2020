@@ -165,7 +165,7 @@ def look_up_and_down(matrix, pos):
             visible_occupied_seats += 1
         break
         
-    for i in range(1, len(matrix)-row+1):
+    for i in range(1, len(matrix)-row):
         next_cell = matrix[row+i][col]
         if next_cell == 0:
             continue
@@ -188,7 +188,7 @@ def look_left_and_right(matrix, pos):
             visible_occupied_seats += 1
         break
 
-    for i in range(1, len(matrix[0])-col+1):
+    for i in range(1, len(matrix[0])-col):
         next_cell = matrix[row][col+i]
         if next_cell == 0:
             continue
@@ -211,7 +211,7 @@ def look_diagonal(matrix, pos):
             visible_occupied_seats += 1
         break
 
-    for i in range(1, min(row, len(matrix[0])-col)+1):
+    for i in range(1, min(row+1, len(matrix[0])-col)):
         next_cell = matrix[row-i][col+i]
         if next_cell == 0:
             continue
@@ -219,7 +219,7 @@ def look_diagonal(matrix, pos):
             visible_occupied_seats += 1
         break
 
-    for i in range(1, min(len(matrix)-row, col)+1):
+    for i in range(1, min(len(matrix)-row, col+1)):
         next_cell = matrix[row+i][col-i]
         if next_cell == 0:
             continue
@@ -227,7 +227,7 @@ def look_diagonal(matrix, pos):
             visible_occupied_seats += 1
         break
 
-    for i in range(1, min(len(matrix)-row, len(matrix[0])-col)+1):
+    for i in range(1, min(len(matrix)-row, len(matrix[0])-col)):
         next_cell = matrix[row+i][col+i]
         if next_cell == 0:
             continue
@@ -252,7 +252,7 @@ def change_seats_visibility(matrix): # fix this -- index error
             seat = matrix[row][col]
             if seat == 0:
                 continue
-            if seat.is_occupied() and look_around(matrix, (row, col)) <= 5:
+            if seat.is_occupied() and look_around(matrix, (row, col)) >= 5:
                 marked_for_change.append(seat)
             elif not seat.is_occupied() and look_around(matrix, (row, col)) == 0:
                 marked_for_change.append(seat)
@@ -268,19 +268,3 @@ while change_seats_visibility(seating_matrix):
     continue
 
 print("\nThe count of occupied seats is:", count_occupied_seats(seating_matrix))
-
-# Testing
-
-position = (5, 2)
-print()
-print(position)
-print_matrix(seating_matrix)
-
-print()
-print("Up and down:", look_up_and_down(seating_matrix, position))
-print()
-print("Left and right:", look_left_and_right(seating_matrix, position))
-print()
-print("Diagonal:", look_diagonal(seating_matrix, position))
-
-print("All together:", look_around(seating_matrix, position))
