@@ -80,13 +80,13 @@ def process_instruction(ship, instruction):
 
 # calculate Manhattan Distance between current position and start position
 
-# test_ship = Ship()
+test_ship = Ship()
 
-# for item in input_data:
-#     process_instruction(test_ship, item)
+for item in input_data:
+    process_instruction(test_ship, item)
 
-# print("\nThe Manhattan Distance between the ship's current location and the starting location is:", test_ship.get_distance())
-# print()
+print("\nThe Manhattan Distance between the ship's current location and the starting location is:", test_ship.get_distance())
+print()
 
 #****************** Part 2 *****
 
@@ -96,12 +96,8 @@ def process_instruction(ship, instruction):
 
 def bind_wp_to_ship(pos_ship, wp, dir, distance): 
     wp.change_pos(pos_ship)
-    print("binding:", wp.get_pos())
     wp.move(distance[0], dir[0])
-    print("binding:", wp.get_pos())
     wp.move(distance[1], dir[1])
-    print("binding:", wp.get_pos())
-    print("ship stays at:", pos_ship)
 
 def find_dir_wp(pos_ship, wp): # check if something is wrong with E/W
     dir_0 = None
@@ -114,7 +110,6 @@ def find_dir_wp(pos_ship, wp): # check if something is wrong with E/W
         dir_1 = "E"
     else:
         dir_1 = "W"
-    print("The waypoint lies:", [dir_0, dir_1])
     return [dir_0, dir_1]
 
 def find_distance_wp(pos_ship, wp):
@@ -125,7 +120,6 @@ def find_distance_wp(pos_ship, wp):
 def rotate_waypoint(pos_ship, wp, leftright, deg, distance): # continue here -- unfinished
     loc_wp = find_dir_wp(pos_ship, wp)
     dir = [turning_directions[loc_wp[0]][leftright][deg], turning_directions[loc_wp[1]][leftright][deg]]
-    print("New direction:", dir)
     bind_wp_to_ship(pos_ship, wp, dir, distance)
 
 # create function to process instructions according to new rules
@@ -135,11 +129,10 @@ def process_instruction_v2(ship, wp, instruction): # test this
     how_far = instruction[1]
     if command == "F":
         distance = find_distance_wp(ship.get_pos(), wp)
-        print(distance)
+        dir = find_dir_wp(ship.get_pos(), wp)
         for i in range(how_far):
             ship.change_pos(wp.get_pos())
-            print(ship.get_pos())
-            bind_wp_to_ship(ship.get_pos(), wp, dir=find_dir_wp(ship.get_pos(), wp), distance)
+            bind_wp_to_ship(ship.get_pos(), wp, dir, distance)
     elif command in "ESWN":
         wp.move(how_far, command)
     elif command in "LR":
@@ -149,45 +142,11 @@ def process_instruction_v2(ship, wp, instruction): # test this
 
 # calculate Manhattan Distance between current position and start position
 
-print(input_data)
-
 flag_ship = Ship()
-print(flag_ship.get_pos())
-
 waypoint = Ship((-1, 10))
-print(waypoint.get_pos())
 
-process_instruction_v2(flag_ship, waypoint, input_data[0])
+for item in input_data:
+    process_instruction_v2(flag_ship, waypoint, item)
 
-print(flag_ship.get_pos())
-print(waypoint.get_pos())
-
-# for item in input_data:
-#     process_instruction_v2(flag_ship, waypoint, item)
-
-# print("\nThe new Manhattan Distance between the ship's current location and the starting location is:", flag_ship.get_distance())
-# print()
-
-# Testing
-
-# print()
-# flag_ship = Ship()
-# print(flag_ship.get_pos())
-# print(flag_ship.get_dir())
-
-# waypoint = Ship((-1, 10))
-# print(waypoint.get_pos())
-# print(waypoint.get_dir())
-
-# flag_ship.change_pos((2, 2))
-# bind_wp_to_ship(flag_ship.get_pos(), waypoint, ["S", "E"], [1, 2])
-# print(flag_ship.get_pos())
-# print(waypoint.get_pos())
-
-# rotate_waypoint(flag_ship.get_pos(), waypoint, "R", 90, [1, 2])
-
-# print(flag_ship.get_pos())
-# print(waypoint.get_pos())
-
-# print(find_distance_wp(flag_ship.get_pos(), waypoint))
-
+print("\nThe new Manhattan Distance between the ship's current location and the starting location is:", flag_ship.get_distance())
+print()
