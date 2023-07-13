@@ -79,13 +79,13 @@ def process_instruction(ship, instruction):
 
 # calculate Manhattan Distance between current position and start position
 
-test_ship = Ship()
+# test_ship = Ship()
 
-for item in input_data:
-    process_instruction(test_ship, item)
+# for item in input_data:
+#     process_instruction(test_ship, item)
 
-print("\nThe Manhattan Distance between the ship's current location and the starting location is:", test_ship.get_distance())
-print()
+# print("\nThe Manhattan Distance between the ship's current location and the starting location is:", test_ship.get_distance())
+# print()
 
 #****************** Part 2 *****
 
@@ -93,11 +93,12 @@ print()
 
 # create function to rotate waypoint
 
-def bind_wp_to_ship(ship, wp, dir, distance): # continue here -- doesn't work yet
-    wp.move(distance[0], dir[0], ship.pos)
-    wp.move(distance[0], dir[1])
+def bind_wp_to_ship(pos_ship, wp, dir, distance): 
+    wp.change_pos(pos_ship)
+    wp.move(distance[0], dir[0])
+    wp.move(distance[1], dir[1])
 
-def rotate_waypoint(ship, wp, leftright, deg, distance):
+def rotate_waypoint(pos_ship, wp, leftright, deg, distance): # continue here -- unfinished
     dir_0 = None
     dir_1 = None
     if ship.pos[0] < wp.pos[0]:
@@ -108,17 +109,22 @@ def rotate_waypoint(ship, wp, leftright, deg, distance):
         dir_1 = "E"
     else:
         dir_1 = "W"
+    dir_0 = turning_directions[dir_0][leftright][deg]
+    dir_1 = turning_directions[dir_1][leftright][deg]
+    
     
 
 # Testing
 
-flag_ship = Ship([170, -38])
-waypoint = Ship()
-
+flag_ship = Ship()
 print(flag_ship.get_pos())
+print(flag_ship.get_dir())
+waypoint = Ship()
+waypoint.change_pos([100, 20])
 print(waypoint.get_pos())
-
-bind_wp_to_ship(flag_ship, waypoint, ["N", "E"], [1, 10])
+print(waypoint.get_dir())
+flag_ship.move(20)
+bind_wp_to_ship(flag_ship.get_pos().copy(), waypoint, ["N", "E"], [1, 10])
 
 print(flag_ship.get_pos())
 print(waypoint.get_pos())
