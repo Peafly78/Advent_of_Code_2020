@@ -14,7 +14,7 @@ with open("12_navigation_input.txt") as input:
 # create ship class
 
 class Ship:
-    def __init__(self, pos=[0, 0], dir="E"):
+    def __init__(self, pos=(0, 0), dir="E"):
         self.pos = pos
         self.dir = dir
     
@@ -28,13 +28,13 @@ class Ship:
         self.dir = dir
 
     def change_pos(self, pos):
-        self.pos = pos     
+        self.pos = pos   
     
     def move(self, steps, dir=None, start=None):
         if not dir:
             dir = self.dir
         if not start:
-            start = self.pos
+            start = list(self.pos)
         if dir == "E":
             start[1] += steps
         elif dir == "W":
@@ -43,6 +43,7 @@ class Ship:
             start[0] += steps
         elif dir == "N":
             start[0] -= steps
+        self.change_pos(tuple(start))
     
     def get_distance(self):
         return abs(self.pos[0] + self.pos[1])
@@ -91,42 +92,60 @@ def process_instruction(ship, instruction):
 
 
 
-# create function to rotate waypoint
+# create functions to rotate waypoint
 
 def bind_wp_to_ship(pos_ship, wp, dir, distance): 
     wp.change_pos(pos_ship)
+    print("binding:", wp.get_pos())
     wp.move(distance[0], dir[0])
+    print("binding:", wp.get_pos())
     wp.move(distance[1], dir[1])
+    print("binding:", wp.get_pos())
+    print("ship stays at:", pos_ship)
 
-def rotate_waypoint(pos_ship, wp, leftright, deg, distance): # continue here -- unfinished
+def find_dir_wp(pos_ship, wp):
     dir_0 = None
     dir_1 = None
-    if ship.pos[0] < wp.pos[0]:
+    if pos_ship[0] < wp.pos[0]:
         dir_0 = "S"
     else:
         dir_0 = "N"
-    if ship.pos[1] < wp.pos[1]:
+    if pos_ship[1] < wp.pos[1]:
         dir_1 = "E"
     else:
         dir_1 = "W"
-    dir_0 = turning_directions[dir_0][leftright][deg]
-    dir_1 = turning_directions[dir_1][leftright][deg]
-    
-    
+    print("The waypoint lies:", [dir_0, dir_1])
+    return [dir_0, dir_1]
+
+
+def rotate_waypoint(pos_ship, wp, leftright, deg, distance): # continue here -- unfinished
+    loc_wp = find_dir_wp(pos_ship, wp)
+    dir = [turning_directions[loc_wp[0]][leftright][deg], turning_directions[loc_wp[1]][leftright][deg]]
+    print("New direction:", dir)
+    bind_wp_to_ship(pos_ship, wp, dir, distance)
+
+# create function to process instructions according to new rules
+
+#continue here    
 
 # Testing
 
+print()
 flag_ship = Ship()
 print(flag_ship.get_pos())
 print(flag_ship.get_dir())
-waypoint = Ship()
-waypoint.change_pos([100, 20])
+
+waypoint = Ship((10, 20))
 print(waypoint.get_pos())
 print(waypoint.get_dir())
-flag_ship.move(20)
-bind_wp_to_ship(flag_ship.get_pos().copy(), waypoint, ["N", "E"], [1, 10])
+
+flag_ship.change_pos((2, 2))
+bind_wp_to_ship(flag_ship.get_pos(), waypoint, ["S", "E"], [1, 2])
+print(flag_ship.get_pos())
+print(waypoint.get_pos())
+
+rotate_waypoint(flag_ship.get_pos(), waypoint, "R", 90, [1, 2])
 
 print(flag_ship.get_pos())
 print(waypoint.get_pos())
 
-#rotate_waypoint(flag_ship, waypoint, "R", 90)
