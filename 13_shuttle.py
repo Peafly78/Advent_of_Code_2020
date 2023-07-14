@@ -55,25 +55,32 @@ def find_cascade(buses, interval=1, start=None, step=1):
 # create dictionary with timestamp and interval values
 
 bus_dict = {}
+cascade = list()
 step = 1
+interval = 1
 
-for i in range(len(input_data)-1):
-    bus_1 = input_data[i]
+for i in range(1, len(input_data)):
+    bus_1 = input_data[i-1]
     if bus_1 == "x":
+        # append next value in cascade
         continue
-    idx_bus_2 = i+1
+    idx_bus_2 = i
     bus_2 = input_data[idx_bus_2]
     while bus_2 == "x":
+        cascade.append(bus_2)
         step += 1
         idx_bus_2 +=1
         bus_2 = input_data[idx_bus_2]
     bus_dict[(bus_1, bus_2)] = find_cascade((bus_1, bus_2), step=step)
+    casc_stamp_b2, casc_int_b2 = find_cascade((bus_1, bus_2), start) # unfinished -- continue here
+    cascade.append(find_cascade((bus_1, bus_2), interval=interval, start=)))
     step = 1
 
 print(bus_dict)
+print(input_data)
+print(cascade)
 
-# usint dict values calculate end result
-        
+
 # Testing
 
 print()
