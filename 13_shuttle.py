@@ -35,7 +35,7 @@ These two numbers multiplied are:""", shortest_waiting_time[0] * shortest_waitin
 #****************** Part 2 *****
 
 
-# find way to calculate timestamp after which busses cascade 
+# create function to tell whether a list's values are cascading or not 
 
 def is_cascade(timestamps): 
     for i in range(1, len(timestamps)):
@@ -43,24 +43,46 @@ def is_cascade(timestamps):
             return False
     return True
 
-# create function to return list with timestamps for each bus and x for empty bus slots
+# create function to return timestamp of first cascading value and cascading intervallist with timestamps for each bus and x for empty bus slots
 
 def find_cascade(buses, interval=1, start=None, step=1):
     if not start:
         start = buses[0]
-    timestamp_bus_1 = buses[1]
     while (start + step) % buses[1] != 0:
         start += interval * buses[0]
-    return start
+    return start + step, start // buses[0]
 
-def find_interval(): # continue here
-    pass
+# create dictionary with timestamp and interval values
 
-# create function to fill empty bus slots (==x) with numbers that fit cascade
+bus_dict = {}
+step = 1
+
+for i in range(len(input_data)-1):
+    bus_1 = input_data[i]
+    if bus_1 == "x":
+        continue
+    idx_bus_2 = i+1
+    bus_2 = input_data[idx_bus_2]
+    while bus_2 == "x":
+        step += 1
+        idx_bus_2 +=1
+        bus_2 = input_data[idx_bus_2]
+    bus_dict[(bus_1, bus_2)] = find_cascade((bus_1, bus_2), step=step)
+    step = 1
+
+print(bus_dict)
+
+# usint dict values calculate end result
         
 # Testing
 
-print(find_cascade([13, 59], interval=11, start=78, step=3))
+print()
+print(find_cascade((7, 13))[1])
+print(find_cascade((7, 13))[0])
+
+# print(find_cascade([13, 59], interval=find_interval((7, 13)), start=78, step=3))
+# print(find_cascade((59, 31), interval=find_interval((13,59)), start=2655, step=2))
+# print(find_cascade((31, 19)), interval=find_interval(59, 31))
 
 # bus_7 = [7*i for i in range(33)]
 # bus_13 = [13*i for i in range(33)]
