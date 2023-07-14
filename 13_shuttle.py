@@ -42,9 +42,37 @@ def is_cascade(timestamps):
         if timestamps[i]-1 != timestamps[i-1]:
             return False
     return True
+
+# create function to return list with timestamps for each bus and x for empty bus slots
+
+def find_cascade(buses, interval=1, start=None, step=1):
+    if not start:
+        start = buses[0]
+    timestamp_bus_1 = buses[1]
+    while (start + step) % buses[1] != 0:
+        start += interval * buses[0]
+    return start
+
+def find_interval(): # continue here
+    pass
+
+# create function to fill empty bus slots (==x) with numbers that fit cascade
         
 # Testing
 
-test_list = [5, 9, 10]
+print(find_cascade([13, 59], interval=11, start=78, step=3))
 
-print(is_cascade(test_list))
+# bus_7 = [7*i for i in range(33)]
+# bus_13 = [13*i for i in range(33)]
+
+# bus_7_test = [77]
+# bus_7_test.extend([7*13*i + 7*11 for i in range(1, 33)])
+
+# print(bus_7)
+# print(bus_13)
+# print()
+# print(bus_7_test)
+
+# test_list = [5, 9, 10]
+
+# print(is_cascade(test_list))
