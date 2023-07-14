@@ -3,6 +3,8 @@
 #****************** Part 1 *****
 
 
+from functools import reduce
+
 # get input data
 
 estimate = None
@@ -33,4 +35,16 @@ These two numbers multiplied are:""", shortest_waiting_time[0] * shortest_waitin
 #****************** Part 2 *****
 
 
-# 
+# find way to calculate timestamp after which busses cascade 
+
+def is_cascade(timestamps): 
+    for i in range(1, len(timestamps)):
+        if timestamps[i]-1 != timestamps[i-1]:
+            return False
+    return True
+        
+# Testing
+
+test_list = [5, 9, 10]
+
+print(is_cascade(test_list))
