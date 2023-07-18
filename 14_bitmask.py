@@ -120,25 +120,25 @@ for item in processed_mask_list:
         for key, value in item.items():
             new_addresses = process_floating_bits(apply_mask_2(bitmask_2, convert_to_bin_36zeros(key)))
             for address in new_addresses:
-                combined_memory_2[convert_to_dec(address)] = value
-            
+                combined_memory_2[convert_to_dec(address)] = value            
     else:
         bitmask_2 = item
 
-# print(combined_memory_2)
+# for key, value in combined_memory_2.items():
+#     print(key, " --> ", value)
 
 # calculate sum of all values in combined memory
 
 result_2 = sum(combined_memory_2.values())
 
-print("\nThe sum of all values in memory after completion of program initialization according to new is:", result_2)
+print("\nThe sum of all values in memory after completion of program initialization according to new rules is:", result_2)
 
 # Testing
 
-# test_mask = "000000000000000000000000000000X1101X"
+# test_mask = "110110X0X001010X1100010XX01101111X10"
 
 # new_addresses = process_floating_bits(test_mask)
 
 # print()
 # for address in new_addresses:
-#     print(address)
+#     print(convert_to_dec(address))
