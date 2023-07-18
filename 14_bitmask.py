@@ -60,6 +60,7 @@ print("\nThe sum of all values in memory after completion of program initializat
 
 #****************** Part 2 *****
 
+from itertools import permutations
 
 # format input data so it is usable for new rules
 
@@ -74,17 +75,38 @@ def apply_mask(mask, value_str):
             changed_val += mask[i]
     return changed_val
 
-def find_all_combos(value_str):
-    # import itertools etc.
-    pass
+def find_all_combos(n):
+    combos = set()
+    values = ["1" for i in range(n)] + ["0" for i in range(n)]
+    print(values)
+    for combo in permutations(values, n):
+        combos.add(combo)
+    return list(combos)
 
 def process_floating_bits(value_str):
-    adress_list = list()
-    new_address = ""
-    for 
+    address_list = list()
+    combos = find_all_combos(value_str.count("X"))
+    for combo in combos:
+        new_address = ""
+        idx = 0
+        for char in value_str:
+            if char == "X":
+                new_address += combo[idx]
+                idx += 1
+            else:
+                new_address += char
+        address_list.append(new_address)
+    return address_list
 
 # calculate result according to new rules
 
 
 # Testing
 
+test_mask = "000000000000000000000000000000X1101X"
+
+new_addresses = process_floating_bits(test_mask)
+
+print()
+for address in new_addresses:
+    print(address)
