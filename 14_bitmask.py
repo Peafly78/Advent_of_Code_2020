@@ -83,6 +83,20 @@ def find_all_combos(n):
             combos.append(combo)
     return combos
 
+def create_addresses(value_str):
+    address_list = [""]
+    for char in value_str:
+        if char == "X":
+            new_addresses = list()
+            for i in range(len(address_list)):
+                new_addresses.append(address_list[i] + "1")
+                address_list[i] += "0"
+            address_list += new_addresses
+        else:
+            for i in range(len(address_list)):
+                address_list[i] += char
+    return address_list
+
 def process_floating_bits(value_str):
     address_list = list()
     combos = find_all_combos(value_str.count("X"))
@@ -118,7 +132,7 @@ bitmask_2 = ""
 for item in processed_mask_list:
     if type(item) == dict:
         for key, value in item.items():
-            new_addresses = process_floating_bits(apply_mask_2(bitmask_2, convert_to_bin_36zeros(key)))
+            new_addresses = create_addresses(apply_mask_2(bitmask_2, convert_to_bin_36zeros(key)))
             for address in new_addresses:
                 combined_memory_2[convert_to_dec(address)] = value            
     else:
@@ -142,3 +156,10 @@ print("\nThe sum of all values in memory after completion of program initializat
 # print()
 # for address in new_addresses:
 #     print(convert_to_dec(address))
+
+# result = "000000000000000000000000000000X1101X"
+
+# new_addresses = create_addresses(result)
+
+# for a in new_addresses:
+#     print(a)
