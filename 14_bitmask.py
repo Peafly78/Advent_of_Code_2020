@@ -66,7 +66,7 @@ from itertools import permutations
 
 # change apply mask function according to new rules
 
-def apply_mask(mask, value_str):
+def apply_mask_2(mask, value_str):
     changed_val = ""
     for i in range(len(mask)):
         if mask[i] == "0":
@@ -76,12 +76,12 @@ def apply_mask(mask, value_str):
     return changed_val
 
 def find_all_combos(n):
-    combos = set()
+    combos = list()
     values = ["1" for i in range(n)] + ["0" for i in range(n)]
-    print(values)
     for combo in permutations(values, n):
-        combos.add(combo)
-    return list(combos)
+        if combo not in combos:
+            combos.append(combo)
+    return combos
 
 def process_floating_bits(value_str):
     address_list = list()
@@ -100,13 +100,45 @@ def process_floating_bits(value_str):
 
 # calculate result according to new rules
 
+processed_mask_list = list()
+
+for item in mask_list:
+    if type(item) == dict:
+        for key, value in item.items():
+            processed_mask_list.append({int(key[4:-1]) : value})
+    else:
+        processed_mask_list.append(item)
+
+# for item in processed_mask_list:
+#     print(item)
+
+combined_memory_2 = dict()
+bitmask_2 = ""
+
+for item in processed_mask_list:
+    if type(item) == dict:
+        for key, value in item.items():
+            new_addresses = process_floating_bits(apply_mask_2(bitmask_2, convert_to_bin_36zeros(key)))
+            for address in new_addresses:
+                combined_memory_2[convert_to_dec(address)] = value
+            
+    else:
+        bitmask_2 = item
+
+# print(combined_memory_2)
+
+# calculate sum of all values in combined memory
+
+result_2 = sum(combined_memory_2.values())
+
+print("\nThe sum of all values in memory after completion of program initialization according to new is:", result_2)
 
 # Testing
 
-test_mask = "000000000000000000000000000000X1101X"
+# test_mask = "000000000000000000000000000000X1101X"
 
-new_addresses = process_floating_bits(test_mask)
+# new_addresses = process_floating_bits(test_mask)
 
-print()
-for address in new_addresses:
-    print(address)
+# print()
+# for address in new_addresses:
+#     print(address)
