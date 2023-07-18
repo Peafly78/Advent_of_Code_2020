@@ -55,5 +55,36 @@ result = sum(combined_memory.values())
 
 print("\nThe sum of all values in memory after completion of program initialization is:", result)
 
+
+
+
+#****************** Part 2 *****
+
+
+# format input data so it is usable for new rules
+
+# change apply mask function according to new rules
+
+def apply_mask(mask, value_str):
+    changed_val = ""
+    for i in range(len(mask)):
+        if mask[i] == "0":
+            changed_val += value_str[i]
+        else:
+            changed_val += mask[i]
+    return changed_val
+
+def find_all_combos(value_str):
+    # import itertools etc.
+    pass
+
+def process_floating_bits(value_str):
+    adress_list = list()
+    new_address = ""
+    for 
+
+# calculate result according to new rules
+
+
 # Testing
 
