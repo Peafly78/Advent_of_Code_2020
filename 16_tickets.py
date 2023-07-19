@@ -22,9 +22,6 @@ nearby_tickets = [tuple([int(num) for num in ticket.split(",")]) for ticket in i
 
 # exclude invalid tickets
 
-for key, val in spec_dict.items():
-    print(key, " >> ", val)
-
 all_nums = list()
 
 for val in spec_dict.values():
@@ -41,4 +38,67 @@ for ticket in nearby_tickets:
             ticket_scanning_error_rate += num
 
 print("\nThe ticket scanning error rate is:", ticket_scanning_error_rate)
+
+
+
+
+#****************** Part 2 *****
+
+
+
+# exclude invalid tickets
+
+valid_tickets = list()
+
+for ticket in nearby_tickets:
+    valid = True
+    for num in ticket:
+        if num not in valid_nums:
+            valid = False
+    if valid:
+        valid_tickets.append(ticket)
+
+# determine the meaning of the various fields
+
+valid_nums_dict = {}
+
+for key, val in spec_dict.items():
+    new_val = list()
+    for nums in val:
+        new_val.extend(i for i in range(nums[0], nums[1]+1))
+    valid_nums_dict[key] = new_val
+
+field_position_dict = {}
+possible_fields = list(valid_nums_dict.keys())
+
+while len(list(field_position_dict)) < len(valid_tickets[0]):
+    for i in range(len(valid_tickets[0])):
+        if i in field_position_dict:
+            continue
+        next_please = False
+        remaining_fields = [item for item in possible_fields if item not in field_position_dict.values()]
+        if len(remaining_fields) == 1:
+            field_position_dict[i] = remaining_fields[0]
+            break
+        for ticket in valid_tickets:
+            if next_please:
+                break
+            for key, value in valid_nums_dict.items():
+                if ticket[i] not in valid_nums_dict[key]:
+                    if key in remaining_fields:
+                        remaining_fields.remove(key)
+                        if len(remaining_fields) == 1:
+                            field_position_dict[i] = remaining_fields[0]
+                            next_please = True
+                            break
+
+# calculate result from your ticket
+
+result = 1
+
+for key, value in field_position_dict.items():
+    if value.startswith("departure"):
+        result *= your_ticket[key]
+
+print("\nThe final multiplication result of your ticket is:", result)
 
