@@ -10,18 +10,17 @@ starting_numbers = [1,0,15,2,10,13]
 
 # play game and create number list according to rules
 
-playing_numbers = starting_numbers[:]
+count = len(starting_numbers)
+last_place_dict = {starting_numbers[i] : i + 1 for i in range(len(starting_numbers)-1)}
 
-current_num = playing_numbers[-1]
+current_num = starting_numbers[-1]
 
-while len(playing_numbers) < 2020:
-    if current_num not in playing_numbers[:-1]:
-        current_num = 0
-    else:
-        reversed_playing_list = playing_numbers[:-1]
-        reversed_playing_list.reverse()
-        current_num = reversed_playing_list.index(current_num)+1
-    playing_numbers.append(current_num)
+while count != 30000000:
+    next_num = 0
+    if current_num in last_place_dict:
+        next_num = count - last_place_dict[current_num]
+    last_place_dict[current_num] = count
+    current_num = next_num
+    count += 1
 
-
-print(playing_numbers[-1])
+print(current_num)
