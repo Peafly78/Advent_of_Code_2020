@@ -37,7 +37,7 @@ class Cube:
     def deactivate(self):
         self.active = False
     
-    def toggle_status(self):
+    def toggle_state(self):
         if self.active:
             self.deactivate()
         else:
@@ -65,6 +65,28 @@ for y in range(len(input_data)):
         if input_data[y][x] == "#":
             pocket_dimension[1][y+20][x+20].activate()
 
+# create function to emulate changes
+
+def count_active_neighbors(grid, cube):
+    count = 0
+    for neighbor in cube.neighbors:
+        print(list(neighbor))
+            # count += 1
+    return count
+
+def simulation(grid):
+    to_be_toggled = list()
+    for plane in grid:
+        for row in plane:
+            for cube in row:
+                if not cube.active and count_active_neighbors(grid, cube) == 3:
+                    to_be_toggled.append(cube)
+                else:
+                    if count_active_neighbors(grid, cube) not in [2, 3]:
+                        to_be_toggled.append(cube)
+    for item in to_be_toggled:
+        item.toggle_state()
+
 # display grid
 
 def display_grid(grid):
@@ -78,9 +100,6 @@ def display_grid(grid):
         print()
     print()
 
-for plane in pocket_dimension:
-    display_grid(plane)
-
 # count active cubes
 
 def count_active_cubes(matrix):
@@ -92,9 +111,19 @@ def count_active_cubes(matrix):
                     count += 1
     return count
 
+# Testing
+
+for plane in pocket_dimension:
+    display_grid(plane)
+
 print(count_active_cubes(pocket_dimension))
 
-# Testing
+simulation(pocket_dimension)
+
+for plane in pocket_dimension:
+    display_grid(plane)
+
+print(count_active_cubes(pocket_dimension))
 
 # test_cube = Cube((10,15,20))
 # print(test_cube)
