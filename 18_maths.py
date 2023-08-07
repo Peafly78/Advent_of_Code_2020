@@ -9,26 +9,7 @@
 input_data = None
 
 with open("18_maths_input.txt") as input:
-    input_data = [operation.strip("\n") for operation in input.readlines()]
-
-print(input_data)
-
-# find subcalculations
-
-def find_subcalc(calc): # test with input
-    start = 0
-    end = len(calc)
-    nesting_level = 0
-    for i in range(len(calc)):
-        if calc[i] == "(":
-            start = i+1
-            nesting_level += 1
-        if calc[i] == ")":
-            nesting_level -= 1
-            if nesting_level == 0:
-                end = i
-    return calc[start:end]
-            
+    input_data = [operation.strip("\n") for operation in input.readlines()]          
 
 # format operation
 
@@ -45,51 +26,64 @@ for calc in input_data:
             calculation.append(char)
     calculations.append(calculation)
 
-print(calculations)
+# find subcalculations
+
+def find_subcalc(calc): # test with input
+    start = 0
+    end = len(calc)
+    nesting_level = 0
+    for i in range(len(calc)):
+        if calc[i] == "(":
+            start = i+1
+            nesting_level += 1
+            for j in range(start, len(calc)):
+                if calc[j] == ")":
+                    nesting_level -= 1
+                    if nesting_level == 0:
+                        end = j                        
+                        subcalc = calc[start:end]
+                        if len(subcalc) == len(calc):
+                            return None
+                        return calc[start:end]
+                elif calc[j] == "(":
+                    nesting_level += 1
+                else:
+                    continue       
+
+def count_elements(nested_list):
+    count = 0
+    for item in nested_list:
+        if isinstance(item, list):
+            count += count_elements(item) + 2
+        else:
+            count += 1
+    return count         
 
 # reorder calculations
 
-def reorder(calc): 
-    print("reordering:", calc)
+def reorder(calc):
     new_order = list()
-    flag = False
     skip = 0
     while skip < len(calc):
         for i in range(skip, len(calc)):
-            if flag:
-                flag = False
+            item = calc[i]
+            if item == "(":
+                item = find_subcalc(calc[i:])
+                if "(" in item:
+                    sub = reorder(item)
+                    skip += count_elements(sub)+2
+                    new_order.append(sub)
+                else:
+                    skip += len(item)+2
+                    new_order.append(item)
                 break
-            print("processing:", i, calc[i])
-            if calc[i] == "(":
-                print("found subcalc")
-                sub_calc = calc[i+1:]
-                print("remaining:", sub_calc)
-                nesting_level = 1
-                for j in range(len(sub_calc)):
-                    if sub_calc[j] == "(":
-                        nesting_level += 1
-                        print("increased nesting level to:", nesting_level)
-                    elif sub_calc[j] == ")":
-                        nesting_level -= 1
-                        print("decreased nesting level to:", nesting_level)
-                        if nesting_level != 0:
-                            continue
-                        sub_calc = sub_calc[:j]
-                        while "(" in sub_calc:
-                            sub_calc = reorder(sub_calc)
-                        print(sub_calc)
-                        new_order.append(sub_calc)
-                        skip += i+j
-                        print("skipping:", skip)
-                        flag = True
-                        break
-                continue
-            else:
-                new_order.append(calc[i])
+            elif item == ")":
                 skip += 1
-        
+            else:
+                new_order.append(item)
+                skip += 1
     return new_order
-
+         
 reordered_calcs = [reorder(calc) for calc in calculations]
 
 for calc in reordered_calcs:
