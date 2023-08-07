@@ -13,6 +13,23 @@ with open("18_maths_input.txt") as input:
 
 print(input_data)
 
+# find subcalculations
+
+def find_subcalc(calc): # test with input
+    start = 0
+    end = len(calc)
+    nesting_level = 0
+    for i in range(len(calc)):
+        if calc[i] == "(":
+            start = i+1
+            nesting_level += 1
+        if calc[i] == ")":
+            nesting_level -= 1
+            if nesting_level == 0:
+                end = i
+    return calc[start:end]
+            
+
 # format operation
 
 calculations = list()
@@ -32,7 +49,8 @@ print(calculations)
 
 # reorder calculations
 
-def reorder(calc): # enters infinite loop -- correct
+def reorder(calc): 
+    print("reordering:", calc)
     new_order = list()
     flag = False
     skip = 0
@@ -41,15 +59,31 @@ def reorder(calc): # enters infinite loop -- correct
             if flag:
                 flag = False
                 break
+            print("processing:", i, calc[i])
             if calc[i] == "(":
+                print("found subcalc")
                 sub_calc = calc[i+1:]
+                print("remaining:", sub_calc)
+                nesting_level = 1
                 for j in range(len(sub_calc)):
-                    if sub_calc[j] == ")":
+                    if sub_calc[j] == "(":
+                        nesting_level += 1
+                        print("increased nesting level to:", nesting_level)
+                    elif sub_calc[j] == ")":
+                        nesting_level -= 1
+                        print("decreased nesting level to:", nesting_level)
+                        if nesting_level != 0:
+                            continue
                         sub_calc = sub_calc[:j]
+                        while "(" in sub_calc:
+                            sub_calc = reorder(sub_calc)
+                        print(sub_calc)
                         new_order.append(sub_calc)
                         skip += i+j
+                        print("skipping:", skip)
                         flag = True
                         break
+                continue
             else:
                 new_order.append(calc[i])
                 skip += 1
@@ -58,7 +92,8 @@ def reorder(calc): # enters infinite loop -- correct
 
 reordered_calcs = [reorder(calc) for calc in calculations]
 
-print(reordered_calcs)
+for calc in reordered_calcs:
+    print(calc)
 
 # define helper functions
 
@@ -71,22 +106,27 @@ def multiply(a, b):
 operations = {"+" : add, "*" : multiply}
 
 def solve(calc):
-    result = calc.pop(0)
-    operator = None
+    result = 0
+    operator = "+"
     while calc:
         next = calc.pop(0)
-        if not isinstance(next, int):
-            operator = next
-        else:
-            result = operations[operator](result, next)
+        if not isinstance(next, list):
+            if not isinstance(next, int):
+                operator = next
+            else:
+                result = operations[operator](result, next)
+        else: 
+            result = operations[operator](result, solve(next))
     return result
 
 # calculate result
 
-# results = list()
+results = list()
 
-# for calc in calculations:
-#     results.append(solve(calc))
+for calc in reordered_calcs:
+    results.append(solve(calc))
+    
+print(results)
 
-# print(results)
+print("The sum of the resulting values is:", sum(results))
 
