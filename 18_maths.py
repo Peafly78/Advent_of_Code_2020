@@ -86,9 +86,6 @@ def reorder(calc):
          
 reordered_calcs = [reorder(calc) for calc in calculations]
 
-for calc in reordered_calcs:
-    print(calc)
-
 # define helper functions
 
 def add(a, b):
@@ -117,10 +114,50 @@ def solve(calc):
 
 results = list()
 
-for calc in reordered_calcs:
+for calc in reordered_calcs[:]:
     results.append(solve(calc))
     
 print(results)
 
 print("The sum of the resulting values is:", sum(results))
 
+#****************** Part 2 *****
+
+
+# define function for solving calculations according to new rules
+
+def solve_add_first(calc):
+    step_one_result = list()
+    temp_result = 0
+    operator = "+"
+    while calc:
+        next = calc.pop(0)
+        if not isinstance(next, list):
+            if not isinstance(next, int):
+                operator = next
+                if operator == "*":
+                    step_one_result.append(temp_result)
+                    temp_result = 0
+                    step_one_result.append(operator)
+            else:
+                if operator == "+":
+                    temp_result = operations[operator](temp_result, next)
+                else:
+                    temp_result = next
+        else: 
+            if operator == "+":
+                temp_result = operations[operator](temp_result, solve_add_first(next))
+            else:
+                temp_result = solve_add_first(next)
+    if temp_result:
+        step_one_result.append(temp_result)
+    return solve(step_one_result)   
+
+# calculate results
+
+results_add_first = list()
+
+for calc in [reorder(calc) for calc in calculations]:
+    results_add_first.append(solve_add_first(calc))
+
+print("The sum of the resulting values is:", sum(results_add_first))
